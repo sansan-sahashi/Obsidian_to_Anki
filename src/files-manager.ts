@@ -4,6 +4,7 @@ import { App, TFile, TFolder, TAbstractFile, CachedMetadata, FileSystemAdapter, 
 import { AllFile } from './file'
 import * as AnkiConnect from './anki'
 import { basename } from 'path'
+import multimatch from "multimatch";
 
 interface addNoteResponse {
     result: number,
@@ -63,7 +64,7 @@ export class FileManager {
     constructor(app: App, data:ParsedSettings, files: TFile[], file_hashes: Record<string, string>, added_media: string[]) {
         this.app = app
         this.data = data
-        this.files = files
+        this.files = this.findMatchFiles(files, data)
         this.ownFiles = []
         this.file_hashes = file_hashes
         this.added_media_set = new Set(added_media)
@@ -71,6 +72,12 @@ export class FileManager {
 
     getUrl(file: TFile): string {
         return "obsidian://open?vault=" + encodeURIComponent(this.data.vault_name) + String.raw`&file=` + encodeURIComponent(file.path)
+    }
+
+    findMatchFiles(files: TFile[], data: ParsedSettings): TFile[] {
+        return files.filter((file) => {
+            data.search_path.length > 0 ? multimatch(file.path, data.search_path) : true
+        })
     }
 
     getFolderPathList(file: TFile): TFolder[] {

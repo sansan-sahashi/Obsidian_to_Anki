@@ -28,6 +28,7 @@ export interface PluginSettings {
 		"ID Comments": boolean,
 		"Add Obsidian Tags": boolean
 	}
+	SEARCH_PATH: string[]
 }
 
 export interface FileData {
@@ -52,6 +53,7 @@ export interface FileData {
 	comment: boolean
 	add_context: boolean
 	add_obs_tags: boolean
+	search_path: string[]
 }
 
 export interface ParsedSettings extends FileData {

@@ -393,6 +393,30 @@ export class SettingsTab extends PluginSettingTab {
 			)
 	}
 
+	setup_search_path() {
+		const {containerEl} = this
+		const plugin = (this as any).plugin
+		let search_path = containerEl.createEl('h3', {text: 'Search Path'})
+		plugin.settings.SEARCH_PATH = plugin.hasOwnProperty("SEARCH_PATH") ? plugin.settings.SEARCH_PATH : []
+		new Setting(search_path)
+			.setName("Search Path")
+			.addTextArea(
+				text => {
+					text.setValue(plugin.settings.SEARCH_PATH.join("\n"))
+						.setPlaceholder("Enter a folder path per line.")
+						.onChange(async (value) => {
+							plugin.settings.SEARCH_PATH = value.split("\n")
+								.map((path: string) => path.trim())
+								.filter((path: string) => path.length > 0)
+
+							await plugin.saveAllData()
+						})
+					text.inputEl.rows = 10
+					text.inputEl.cols = 30
+				}
+			)
+	}
+
 	setup_display() {
 		let {containerEl} = this
 
@@ -404,6 +428,7 @@ export class SettingsTab extends PluginSettingTab {
 		this.setup_syntax()
 		this.setup_defaults()
 		this.setup_buttons()
+		this.setup_search_path()
 	}
 
 	async display() {

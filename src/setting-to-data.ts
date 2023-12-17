@@ -42,6 +42,7 @@ export async function settingToData(app: App, settings: PluginSettings, fields_d
     result.comment = settings.Defaults["ID Comments"]
     result.add_context = settings.Defaults["Add Context"]
     result.add_obs_tags = settings.Defaults["Add Obsidian Tags"]
+    result.search_path = settings.SEARCH_PATH
 
     return result
 }
